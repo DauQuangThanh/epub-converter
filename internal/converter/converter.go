@@ -389,11 +389,44 @@ func extensionFromMediaType(mediaType string) string {
 
 // processImages handles image resources in the document.
 func (c *Converter) processImages(doc *model.Document, result *model.ConversionResult) {
-	// Image processing will be handled by the image handler
-	// For now, just count existing resources
-	for range doc.Resources {
-		// Resources are already processed by parser
+	// Process each image resource that doesn't have data loaded yet
+	processedResources := make([]model.Resource, 0, len(doc.Resources))
+
+	for _, res := range doc.Resources {
+		// Skip if data is already loaded (e.g., cover image)
+		if len(res.Data) > 0 {
+			processedResources = append(processedResources, res)
+			continue
+		}
+
+		// Skip non-image resources (CSS, etc.)
+		if !strings.HasPrefix(res.MediaType, "image/") {
+			processedResources = append(processedResources, res)
+			continue
+		}
+
+		// Skip if no source path specified
+		if res.SourcePath == "" {
+			result.AddWarning(fmt.Sprintf("Image %s: no source path specified", res.FileName))
+			continue
+		}
+
+		// Load image data from source path
+		loadedRes, err := c.imgHandler.ProcessImage(res.SourcePath, ".")
+		if err != nil {
+			// Image not found or unsupported - add warning and skip
+			result.AddWarning(fmt.Sprintf("Image %s: %s", res.SourcePath, err))
+			continue
+		}
+
+		// Preserve original ID and FileName from parser
+		loadedRes.ID = res.ID
+		loadedRes.FileName = res.FileName
+		processedResources = append(processedResources, *loadedRes)
 	}
+
+	// Replace resources with processed ones
+	doc.Resources = processedResources
 }
 
 // writeOutput writes EPUB data to the output file.

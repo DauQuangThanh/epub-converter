@@ -341,10 +341,17 @@ func (p *HTMLParser) extractImageRefs(content string, basePath string) []model.R
 			continue
 		}
 
+		// Resolve source path relative to basePath
+		sourcePath := src
+		if !filepath.IsAbs(src) {
+			sourcePath = filepath.Join(basePath, src)
+		}
+
 		resource := model.Resource{
-			ID:        "img-" + sanitizeID(strings.TrimSuffix(baseName, ext)),
-			FileName:  "images/" + baseName,
-			MediaType: mediaType,
+			ID:         "img-" + sanitizeID(strings.TrimSuffix(baseName, ext)),
+			FileName:   "images/" + baseName,
+			MediaType:  mediaType,
+			SourcePath: sourcePath, // Store resolved absolute path
 		}
 		resources = append(resources, resource)
 	}

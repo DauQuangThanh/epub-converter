@@ -290,10 +290,17 @@ func (p *MarkdownParser) extractImageRefs(html string, basePath string) []model.
 			continue // Skip unsupported formats
 		}
 
+		// Resolve source path relative to basePath
+		sourcePath := src
+		if !filepath.IsAbs(src) {
+			sourcePath = filepath.Join(basePath, src)
+		}
+
 		resource := model.Resource{
-			ID:        "img-" + sanitizeID(strings.TrimSuffix(baseName, ext)),
-			FileName:  "images/" + baseName,
-			MediaType: mediaType,
+			ID:         "img-" + sanitizeID(strings.TrimSuffix(baseName, ext)),
+			FileName:   "images/" + baseName,
+			MediaType:  mediaType,
+			SourcePath: sourcePath, // Store resolved absolute path
 			// Data will be loaded by converter
 		}
 

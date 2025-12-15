@@ -50,11 +50,12 @@ type Chapter struct {
 
 // Resource represents an embedded media file (image, stylesheet, font).
 type Resource struct {
-	ID        string // Unique identifier for manifest
-	FileName  string // Path within EPUB (e.g., "images/photo.png")
-	MediaType string // MIME type (e.g., "image/png")
-	Data      []byte // File contents
-	IsCover   bool   // True if this is the cover image
+	ID         string // Unique identifier for manifest
+	FileName   string // Path within EPUB (e.g., "images/photo.png")
+	MediaType  string // MIME type (e.g., "image/png")
+	Data       []byte // File contents
+	IsCover    bool   // True if this is the cover image
+	SourcePath string // Original source file path for loading data
 }
 
 // ConversionResult contains the outcome of a conversion operation.
