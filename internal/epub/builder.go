@@ -31,6 +31,9 @@ func (b *Builder) Build(doc *model.Document) ([]byte, error) {
 		return nil, fmt.Errorf("invalid document: missing title or chapters")
 	}
 
+	// Add colophon page at the end
+	b.addColophon(doc)
+
 	var buf bytes.Buffer
 	if err := b.writeEPUB(&buf); err != nil {
 		return nil, fmt.Errorf("building EPUB: %w", err)
@@ -314,4 +317,29 @@ a:hover {
 
 	_, err = w.Write([]byte(css))
 	return err
+}
+
+// addColophon adds an attribution page at the end of the book.
+func (b *Builder) addColophon(doc *model.Document) {
+	colophonContent := `<hr style="margin: 3em 0;"/>
+<div style="text-align: center; font-family: monospace; white-space: pre-wrap; padding: 2em 1em; background-color: #f9f9f9; border: 1px solid #ddd; margin: 2em 0;">
+------------------------------------------------------------------
+Packaged by Epub Converter Application (c) 2025 Dau Quang Thanh.
+
+URL: <a href="https://github.com/DauQuangThanh/epub-converter">https://github.com/DauQuangThanh/epub-converter</a>
+
+Happy Reading!
+------------------------------------------------------------------
+</div>`
+
+	colophon := model.Chapter{
+		ID:       "colophon",
+		Title:    "About This EPUB",
+		Level:    1,
+		Content:  colophonContent,
+		FileName: "content/colophon.xhtml",
+		Order:    len(doc.Chapters),
+	}
+
+	doc.AddChapter(colophon)
 }
