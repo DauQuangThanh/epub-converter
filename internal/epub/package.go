@@ -2,7 +2,8 @@ package epub
 
 import (
 	"bytes"
-	"html/template"
+	"html"
+	"text/template"
 	"time"
 
 	"github.com/dauquangthanh/epub-converter/internal/model"
@@ -72,14 +73,20 @@ func generatePackageDocument(doc *model.Document) (string, error) {
 	now := time.Now().UTC().Format("2006-01-02T15:04:05Z")
 	date := doc.Metadata.Date.Format("2006-01-02")
 
+	// Escape all user-provided strings for XML safety
+	escapedAuthors := make([]string, len(doc.Metadata.Authors))
+	for i, author := range doc.Metadata.Authors {
+		escapedAuthors[i] = html.EscapeString(author)
+	}
+
 	data := packageData{
-		Identifier:  doc.Metadata.Identifier,
-		Title:       doc.Metadata.Title,
-		Language:    doc.Metadata.Language,
-		Authors:     doc.Metadata.Authors,
-		Description: doc.Metadata.Description,
-		Publisher:   doc.Metadata.Publisher,
-		Rights:      doc.Metadata.Rights,
+		Identifier:  html.EscapeString(doc.Metadata.Identifier),
+		Title:       html.EscapeString(doc.Metadata.Title),
+		Language:    html.EscapeString(doc.Metadata.Language),
+		Authors:     escapedAuthors,
+		Description: html.EscapeString(doc.Metadata.Description),
+		Publisher:   html.EscapeString(doc.Metadata.Publisher),
+		Rights:      html.EscapeString(doc.Metadata.Rights),
 		Date:        date,
 		Modified:    now,
 		Chapters:    doc.Chapters,

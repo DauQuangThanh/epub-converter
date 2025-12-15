@@ -2,7 +2,8 @@ package epub
 
 import (
 	"bytes"
-	"html/template"
+	"html"
+	"text/template"
 
 	"github.com/dauquangthanh/epub-converter/internal/model"
 )
@@ -24,7 +25,7 @@ const contentTemplate = `<?xml version="1.0" encoding="UTF-8"?>
 // contentData holds data for the content template
 type contentData struct {
 	Title   string
-	Content template.HTML
+	Content string
 }
 
 // generateContentDocument generates an XHTML content document.
@@ -39,9 +40,10 @@ func generateContentDocument(chapter *model.Chapter, bookTitle string) (string, 
 		title = bookTitle
 	}
 
+	// Escape title for XML safety, but content is already HTML
 	data := contentData{
-		Title:   title,
-		Content: template.HTML(chapter.Content),
+		Title:   html.EscapeString(title),
+		Content: chapter.Content,
 	}
 
 	var buf bytes.Buffer

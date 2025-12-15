@@ -2,7 +2,8 @@ package epub
 
 import (
 	"bytes"
-	"html/template"
+	"html"
+	"text/template"
 
 	"github.com/dauquangthanh/epub-converter/internal/model"
 )
@@ -37,7 +38,7 @@ const navTemplate = `<?xml version="1.0" encoding="UTF-8"?>
 type navData struct {
 	Language         string
 	Title            string
-	TOCList          template.HTML
+	TOCList          string
 	HasContent       bool
 	FirstChapterHref string
 }
@@ -56,10 +57,11 @@ func generateNavDocument(doc *model.Document) (string, error) {
 		firstChapter = doc.Chapters[0].FileName
 	}
 
+	// Escape language and title for XML safety, TOCList is already HTML
 	data := navData{
-		Language:         doc.Metadata.Language,
-		Title:            doc.Metadata.Title,
-		TOCList:          template.HTML(tocList),
+		Language:         html.EscapeString(doc.Metadata.Language),
+		Title:            html.EscapeString(doc.Metadata.Title),
+		TOCList:          tocList,
 		HasContent:       len(doc.Chapters) > 0,
 		FirstChapterHref: firstChapter,
 	}
@@ -91,8 +93,8 @@ func renderTOCList(entries []model.TOCEntry) string {
 func renderTOCEntry(buf *bytes.Buffer, entry model.TOCEntry, indent int) {
 	indentStr := spaces(indent)
 
-	// Escape HTML in title
-	escapedTitle := template.HTMLEscapeString(entry.Title)
+	// Escape HTML in title for XML safety
+	escapedTitle := html.EscapeString(entry.Title)
 
 	buf.WriteString(indentStr)
 	buf.WriteString("<li>\n")
