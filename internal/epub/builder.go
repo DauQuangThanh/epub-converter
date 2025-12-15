@@ -38,9 +38,6 @@ func (b *Builder) Build(doc *model.Document) ([]byte, error) {
 		return nil, fmt.Errorf("invalid document: missing title or chapters")
 	}
 
-	// Add frontmatter page at the beginning
-	b.addFrontmatter(doc)
-
 	// Add colophon page at the end
 	b.addColophon(doc)
 
@@ -327,39 +324,6 @@ a:hover {
 
 	_, err = w.Write([]byte(css))
 	return err
-}
-
-// addFrontmatter adds a header page at the beginning of the book.
-func (b *Builder) addFrontmatter(doc *model.Document) {
-	frontmatterContent := `<div style="text-align: center; font-family: monospace; white-space: pre-wrap; padding: 2em 1em; background-color: #f9f9f9; border: 1px solid #ddd; margin: 2em 0;">
-------------------------------------------------------------------
-Developed by Dau Quang Thanh - 2025.
-Enterprise AI Solution Architect
-
-Happy Reading!
-------------------------------------------------------------------
-</div>
-<hr style="margin: 3em 0;"/>`
-
-	frontmatter := model.Chapter{
-		ID:       "frontmatter",
-		Title:    "Developer Info",
-		Level:    1,
-		Content:  frontmatterContent,
-		FileName: "content/frontmatter.xhtml",
-		Order:    0,
-	}
-
-	// Prepend to chapters (shift all existing chapters)
-	existingChapters := doc.Chapters
-	doc.Chapters = make([]model.Chapter, 0, len(existingChapters)+1)
-	doc.Chapters = append(doc.Chapters, frontmatter)
-
-	// Update Order for existing chapters
-	for i, ch := range existingChapters {
-		ch.Order = i + 1
-		doc.Chapters = append(doc.Chapters, ch)
-	}
 }
 
 // addColophon adds an attribution page at the end of the book.
