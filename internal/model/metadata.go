@@ -46,6 +46,9 @@ func (m *Metadata) EnsureDefaults() {
 	if m.Language == "" {
 		m.Language = "en"
 	}
+	if len(m.Authors) == 0 {
+		m.Authors = []string{"Dau Quang Thanh"}
+	}
 	m.EnsureIdentifier()
 	if m.Date.IsZero() {
 		m.Date = time.Now()
