@@ -1,0 +1,50 @@
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+toepub
+/toepub-*
+
+# Test binary
+*.test
+
+# Output of go coverage tool
+*.out
+coverage.out
+coverage.html
+
+# Dependency directories
+vendor/
+
+# Go workspace file
+go.work
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Build output
+/dist/
+/build/
+
+# Test fixtures output
+tests/fixtures/**/*.epub
+
+# Environment files
+.env
+.env.*
+
+# Log files
+*.log
+
+# Temporary files
+*.tmp

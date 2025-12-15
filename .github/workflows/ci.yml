@@ -1,0 +1,97 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'
+
+      - name: Download dependencies
+        run: go mod download
+
+      - name: Build
+        run: go build -v ./...
+
+      - name: Test
+        run: go test -race -coverprofile=coverage.out ./...
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v4
+        with:
+          files: coverage.out
+          fail_ci_if_error: false
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'
+
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: latest
+
+  integration:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'
+
+      - name: Build
+        run: go build -o toepub ./cmd/toepub
+
+      - name: Test Markdown conversion
+        run: |
+          ./toepub convert tests/fixtures/markdown/simple.md -o /tmp/simple.epub
+          test -f /tmp/simple.epub
+
+      - name: Test HTML conversion
+        run: |
+          ./toepub convert tests/fixtures/html/simple.html -o /tmp/html.epub
+          test -f /tmp/html.epub
+
+      - name: Test PDF conversion
+        run: |
+          ./toepub convert tests/fixtures/pdf/sample.pdf -o /tmp/pdf.epub
+          test -f /tmp/pdf.epub
+
+      - name: Test stdin input
+        run: |
+          echo "# Hello World" | ./toepub convert - --input-format md -o /tmp/stdin.epub
+          test -f /tmp/stdin.epub
+
+      - name: Test JSON output
+        run: |
+          ./toepub convert tests/fixtures/markdown/simple.md --format json | jq -e '.success == true'
+
+      - name: Install epubcheck
+        run: |
+          wget -q https://github.com/w3c/epubcheck/releases/download/v5.1.0/epubcheck-5.1.0.zip
+          unzip -q epubcheck-5.1.0.zip
+
+      - name: Validate EPUB with epubcheck
+        run: |
+          java -jar epubcheck-5.1.0/epubcheck.jar /tmp/simple.epub || true

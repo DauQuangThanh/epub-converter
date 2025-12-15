@@ -1,0 +1,87 @@
+# golangci-lint configuration for to-epub
+# See: https://golangci-lint.run/usage/configuration/
+
+run:
+  timeout: 5m
+  go: '1.24'
+
+linters:
+  enable:
+    - errcheck      # Check error returns
+    - govet         # Go vet checks
+    - staticcheck   # Static analysis
+    - unused        # Unused code detection
+    - gosimple      # Code simplification
+    - ineffassign   # Ineffectual assignments
+    - misspell      # Spelling mistakes
+    - gofmt         # Format checking
+    - goimports     # Import organization
+    - gocritic      # Go best practices
+    - revive        # Fast linter
+    - gosec         # Security checks
+    - prealloc      # Slice preallocation
+    - unconvert     # Unnecessary conversions
+    - unparam       # Unused function parameters
+
+linters-settings:
+  errcheck:
+    check-type-assertions: true
+    check-blank: true
+
+  govet:
+    enable-all: true
+
+  gofmt:
+    simplify: true
+
+  goimports:
+    local-prefixes: github.com/dauquangthanh/epub-converter
+
+  gocritic:
+    enabled-tags:
+      - diagnostic
+      - style
+      - performance
+
+  revive:
+    rules:
+      - name: blank-imports
+      - name: context-as-argument
+      - name: context-keys-type
+      - name: dot-imports
+      - name: error-return
+      - name: error-strings
+      - name: error-naming
+      - name: exported
+      - name: if-return
+      - name: increment-decrement
+      - name: var-naming
+      - name: var-declaration
+      - name: package-comments
+      - name: range
+      - name: receiver-naming
+      - name: time-naming
+      - name: unexported-return
+      - name: indent-error-flow
+      - name: errorf
+
+  gosec:
+    excludes:
+      - G104 # Audit errors not checked (handled by errcheck)
+
+issues:
+  exclude-rules:
+    # Exclude some linters from running on tests files
+    - path: _test\.go
+      linters:
+        - errcheck
+        - gosec
+        - gocritic
+
+    # Exclude known issues in generated files
+    - path: mock_
+      linters:
+        - unused
+
+  max-issues-per-linter: 50
+  max-same-issues: 10

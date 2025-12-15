@@ -1,0 +1,3 @@
+---
+agent: hanoi.system-architect
+---

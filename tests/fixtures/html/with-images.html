@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HTML with Images</title>
+    <meta name="author" content="Image Tester">
+    <meta name="description" content="Testing image handling in HTML parser">
+</head>
+<body>
+    <h1>Document with Images</h1>
+
+    <p>This document tests image handling in the HTML parser.</p>
+
+    <h2>Local Images</h2>
+
+    <p>A local image reference:</p>
+    <img src="images/sample.png" alt="Sample image">
+
+    <h2>Remote Images</h2>
+
+    <p>Remote images should be preserved as-is:</p>
+    <img src="https://example.com/image.jpg" alt="Remote image">
+
+    <h2>Data URIs</h2>
+
+    <p>Data URI images should be preserved:</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==" alt="Tiny pixel">
+
+    <h2>Conclusion</h2>
+
+    <p>End of image test document.</p>
+</body>
+</html>

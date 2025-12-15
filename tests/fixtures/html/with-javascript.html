@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HTML with JavaScript</title>
+    <script>
+        console.log("This script should be removed");
+    </script>
+</head>
+<body>
+    <h1>Document with JavaScript</h1>
+
+    <p>This document tests JavaScript stripping.</p>
+
+    <script>
+        alert("This should also be removed");
+    </script>
+
+    <h2>Interactive Elements</h2>
+
+    <p>Elements with event handlers:</p>
+    <button onclick="alert('clicked')">Click me</button>
+    <a href="#" onmouseover="highlight(this)">Hover link</a>
+
+    <h2>Conclusion</h2>
+
+    <p>The EPUB should contain no JavaScript.</p>
+
+    <script type="text/javascript">
+        // Another script block
+        function doSomething() {
+            return true;
+        }
+    </script>
+</body>
+</html>
