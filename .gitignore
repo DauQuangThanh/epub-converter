@@ -48,3 +48,4 @@ tests/fixtures/**/*.epub
 
 # Temporary files
 *.tmp
+test-results/
