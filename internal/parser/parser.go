@@ -1,3 +1,10 @@
+// ------------------------------------------------------------------
+// Developed by Dau Quang Thanh - 2025.
+// Enterprise AI Solution Architect
+//
+// Happy Reading!
+// ------------------------------------------------------------------
+
 // Package parser provides input format parsers for the EPUB converter.
 //
 // The parser package implements parsers for Markdown, HTML, and PDF formats.

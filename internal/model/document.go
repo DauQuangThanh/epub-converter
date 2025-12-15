@@ -1,3 +1,10 @@
+// ------------------------------------------------------------------
+// Developed by Dau Quang Thanh - 2025.
+// Enterprise AI Solution Architect
+//
+// Happy Reading!
+// ------------------------------------------------------------------
+
 // Package model provides data structures for the EPUB converter.
 package model
 

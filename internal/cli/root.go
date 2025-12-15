@@ -1,3 +1,10 @@
+// ------------------------------------------------------------------
+// Developed by Dau Quang Thanh - 2025.
+// Enterprise AI Solution Architect
+//
+// Happy Reading!
+// ------------------------------------------------------------------
+
 // Package cli provides command-line interface handling for toepub.
 package cli
 
